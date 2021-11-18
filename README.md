@@ -1,4 +1,4 @@
-# new-archetype
+# todo-list-demo
 
 ## Project setup
 ```
