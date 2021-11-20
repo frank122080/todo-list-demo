@@ -1,15 +1,23 @@
 <template>
-  <div>
-      <Input clearable>
-        <Button slot="append" type="primary">新增</Button>
-      </Input>
-      
+  <div class='main'>
+      <Layout>
+        <Header>
+          <h2>
+            Todo List Demo
+          </h2>
+        </Header>
+        <Content><Todo/></Content>
+    </Layout>
   </div>
 </template>
 
 <script>
-export default {
+import Todo from '@/view/Todo'
 
+export default {
+  components: {
+    Todo
+  }
 }
 </script>
 

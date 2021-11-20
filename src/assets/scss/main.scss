@@ -1,0 +1,14 @@
+.main{
+    .ivu-layout{
+        height: 100%;
+        .ivu-layout-header{
+            h2 {
+                color: wheat;
+            }
+        }
+        .ivu-layout-content{
+            flex:1
+        }
+    }
+
+}

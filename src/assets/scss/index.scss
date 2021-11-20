@@ -1,0 +1,22 @@
+#app {
+    /* 拼音文字不斷字 開始 */
+    .main,
+    .v-transfer-dom,
+    .ivu-notice{
+    word-wrap: break-word;
+    }
+    .ivu-table-cell {
+    word-break: break-word;
+    }
+    /* 拼音文字不斷字 結束*/
+
+    @import './main.scss';
+    @import './todo/page.scss';
+}
+
+.main,
+#app,
+html,
+body{
+    height: 100%
+}
