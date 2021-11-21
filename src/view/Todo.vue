@@ -1,24 +1,24 @@
 <template>
-  <div>
+  <div class="todo">
       <Row type="flex" justify="space-around">
-          <Col span='10'>
+          <Col span='11'>
             <Card>
                 <div class='undoneTitle'>
                     未完成列表
                     <AddTodo :form="form" :submit="submit" :cancel="clearForm"/>
                 </div>
                 <div v-for="(item, index) in undoneList" :key="index">
-                    <ListItem :data="item" :onChange="sortTodoList"/>
+                    <ListItem :data="item" @done="clickDone(index)" @delete="deleteItem(index, undoneList)"/>
                 </div>
             </Card>
           </Col>
-          <Col span="10">
+          <Col span="11">
             <Card>
                 <div class='doneTitle'>
                     完成列表
                 </div>
                 <div v-for="(item, index) in doneList" :key="index">
-                    <ListItem :data="item"/>
+                    <ListItem :data="item" @delete="deleteItem(index, doneList)"/>
                 </div>
             </Card>
           </Col>
@@ -68,6 +68,13 @@ export default {
                 text: ''
             }
         },
+        clickDone (index) {
+            this.doneList.push(this.undoneList[index])
+            this.undoneList.splice(index, 1)
+        },
+        deleteItem (index, content) {
+            content.splice(index, 1)
+        },
         sortTodoList () {
             todoListJson.forEach(item => {
                 if (item.status) {
@@ -85,13 +92,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.undoneTitle,
-.doneTitle{
-    height: 2rem;
-    margin: 5px 0 5px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+<style>
+
 </style>

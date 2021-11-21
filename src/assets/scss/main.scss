@@ -1,6 +1,7 @@
 .main{
     .ivu-layout{
-        height: 100%;
+        min-height:100%; 
+        margin: 0px;
         .ivu-layout-header{
             h2 {
                 color: wheat;

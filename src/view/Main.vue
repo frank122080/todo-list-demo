@@ -7,6 +7,7 @@
           </h2>
         </Header>
         <Content><Todo/></Content>
+        <Footer></Footer>
     </Layout>
   </div>
 </template>

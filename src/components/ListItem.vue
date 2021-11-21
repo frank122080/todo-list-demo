@@ -1,28 +1,48 @@
 <template>
-  <div>
+  <div class="list-item">
       <Card>
-        <div class="titleArea">
+        <div class="title-area">
             <span>
-                <Icon v-if="data.status" size=30 class="done" type="md-checkmark-circle" />
-                <Icon v-else-if="timeOut" size=30 class="timeOut" type="md-close-circle" />
-                <Icon v-else size=30 class="timeIn" type="md-clock" />
-                <IdentifyDot :size="12" :type="data.type" :toolTipDisabled="false"/>
                 <span>
-                    {{data.title}}
+                    <Icon v-if="data.status" size=30 class="done" type="md-checkmark-circle" />
+                    <Icon v-else-if="timeOut" size=30 class="time-out" type="md-close-circle" />
+                    <Icon v-else size=30 class="time-in" type="md-clock" />
+                </span>
+                <span>
+                    <IdentifyDot :size="12" :type="data.type" :toolTipDisabled="false"/>
+                </span>
+                <span class="text">
+                    <p v-if="!isEdit">{{data.title}}</p>
+                    <Input v-else v-model="editData.title"/>
                 </span>
             </span>
-            <span v-if="!data.status">
-                <Checkbox v-model="data.status" size='large'>&#x3000;</Checkbox>
+            <span v-if="!isEdit">
+                <Button class="margin-right-5" v-if="!data.status" type='primary' icon="md-checkmark" @click="clickDone"></Button>
+                <Button class="margin-right-5" v-if="!data.status" type='warning' icon="md-create" @click="edit"></Button>
+                <Button type='error' icon="md-trash" @click="clickDelete"></Button>
+            </span>
+            <span v-else>
+                <Button class="margin-right-5" type='success' icon="md-checkmark" @click="update"></Button>
+                <Button type='error' icon="md-close" @click="cancelEdit"></Button>
             </span>
         </div>
-        <Divider />
+        <Divider orientation="left">內容</Divider>
         <div>
-            {{data.text}}
+            <p v-if="!isEdit">{{data.text}}</p>
+            <Input v-else v-model="editData.text" type='textarea' :maxlength='100' show-word-limit/>
         </div>
-        <Divider />
-        <div>
-            截止時間
-            <span>{{new Date(data.time).toLocaleDateString()}}</span>
+        <Divider orientation="left">時間</Divider>
+        <div class="time-area">
+            <span >
+                截止時間：
+                <span v-if="!isEdit" :class="timeOut&&!data.status ? 'time-out ': ''">
+                    {{data.time ? new Date(data.time).toLocaleDateString() : ''}}
+                </span>
+                <DatePicker style="width: 120px" v-else v-model="editData.time" :options="pickerOptionsToToday" ></DatePicker>
+            </span>
+            
+            <span>新增時間：{{new Date(data.createTime).toLocaleDateString()}}</span>
+            <span>修改時間：{{data.editTime ? new Date(data.editTime).toLocaleDateString() : '未修改'}}</span>
         </div>
       </Card>
   </div>
@@ -30,6 +50,8 @@
 
 <script>
 import IdentifyDot from './item/IdentifyDot.vue'
+import { pickerOptionsToToday } from '@/util/date'
+
 export default {
     created () {
         this.timeCheck()
@@ -39,17 +61,49 @@ export default {
             type: Object,
             require: true
         },
-        onChange: {
+        done: {
             type: Function,
             require: true
         }
     },
     data () {
         return {
-            timeOut: false
+            pickerOptionsToToday,
+            timeOut: false,
+            isEdit: false,
+            editData: {
+                type: '',
+                title: '',
+                text: '',
+                time: ''
+            }
         }
     },
     methods: {
+        clickDone () {
+            this.data.status = true
+            this.$emit('done')
+        },
+        clickDelete () {
+            this.$emit('delete')
+        },
+        edit () {
+            Object.keys(this.editData).forEach(key => {
+                key === 'time' ? this.editData[key] = new Date(this.data[key]) : this.editData[key] = this.data[key]
+            })
+            this.isEdit = true
+        },
+        update () {
+            Object.keys(this.editData).forEach(key => {
+                key === 'time' ? this.data[key] = new Date(this.editData[key]).getTime() : this.data[key] = this.editData[key]
+            })
+            this.data.editTime = Date.now()
+            this.isEdit = false
+            this.timeCheck()
+        },
+        cancelEdit () {
+            this.isEdit = false
+        },
         timeCheck () {
             this.timeOut = this.data.time < Date.now()
         }
@@ -60,18 +114,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.titleArea {
-    display: flex;
-    justify-content: space-between;
-}
-.done {
-    color: green;
-}
-.timeIn {
-    color: orange;
-}
-.timeOut {
-    color: red;
-}
+<style>
+
 </style>

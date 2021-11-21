@@ -9,7 +9,7 @@
     >
         <Form>
             <FormItem label='截止時間'>
-                <DatePicker v-model="form.time"></DatePicker> 
+                <DatePicker v-model="form.time" :options="pickerOptionsToToday"></DatePicker> 
             </FormItem>
             <FormItem label='重要程度'>
                 <RadioGroup v-model="form.level">
@@ -49,6 +49,7 @@
 
 <script>
 import IdentifyDot from './item/IdentifyDot.vue'
+import { pickerOptionsToToday } from '@/util/date'
 
 export default {
     props: {
@@ -67,6 +68,7 @@ export default {
     },
     data () {
         return {
+            pickerOptionsToToday,
             isDrawerOpen: false,
         }
     },
